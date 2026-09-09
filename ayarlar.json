@@ -1,0 +1,5 @@
+{
+  "_aciklama": "Dagitim ayari. Ogrenci burayi gormez, elle duzenlenir.",
+  "_sinif_sunucusu": "Sinif sunucusunun adresi (araclar/sinif_sunucusu.py). BOS BIRAKILIRSA oyun tek basina calisir: sinif kodu ve el kaldirma kapali olur, oyunun geri kalani aynen calisir. Ogrenciler kendi hucresel verileriyle baglanacaksa bu adresin disaridan erisilebilir olmasi gerekir. Ornek: https://sinif.okulum.k12.tr",
+  "sinif_sunucusu": ""
+}

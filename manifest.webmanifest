@@ -1,0 +1,21 @@
+{
+  "name": "Meridyen Seferi",
+  "short_name": "Meridyen",
+  "description": "Eğitici keşif oyunu",
+  "id": "meridyen-seferi",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#10131a",
+  "theme_color": "#10131a",
+  "lang": "tr",
+  "dir": "ltr",
+  "categories": ["education", "games"],
+  "icons": [
+    {"src": "simge-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "simge-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "simge-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"},
+    {"src": "simge.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}
+  ]
+}

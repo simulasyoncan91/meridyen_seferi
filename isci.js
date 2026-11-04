@@ -20,6 +20,7 @@ let kilit = null;          // Int32Array: [0]=uyandirma bayragi, [1]=cevap uzunl
 let tampon = null;         // Uint8Array: cevabin baytlari
 let ekranGenisligi = 60;   // karakter; sayfa olcup bildirir
 let sinifSunucusu = "";    // bos = ag yok; mobil/ayarlar.json'dan gelir
+let olayli = false;        // true: Meridyen OS sayfasi (olay kabugu); false: eski terminal gorunumu
 
 function bildir(veri) { postMessage(veri); }
 
@@ -55,14 +56,51 @@ function agIstek(adres, govde, zamanAsimi) {
   }
 }
 
-async function kayitlariYukle() {
+// KAYIT KALICILIGI -- neden IDBFS DEGIL
+// ------------------------------------
+// Once IDBFS kullaniliyordu: sanal dosya sistemi `FS.syncfs` ile
+// IndexedDB'ye esitleniyordu. CALISMIYORDU ve sebebi yapisal:
+//
+// Oyun tek bir `runPython` cagrisinin icinde bastan sona kosuyor ve
+// cevap beklerken `Atomics.wait` ile BLOKLANIYOR. Yani bu iscinin olay
+// dongusu oyun boyunca hic sira almiyor. `syncfs` eszamansiz -- geri
+// cagrisi calisamiyor. Ayni sebeple ana is parcacigindan gonderilen
+// "kaydet" mesaji da oyun bitene kadar islenmiyor.
+//
+// Sonuc: oyun "Kaydedildi" yaziyor, IndexedDB bos kaliyordu. Kayit
+// yalnizca oyun TEMIZ KAPANINCA iniyordu. Telefonda bu istisna degil
+// kural; Android arka plandaki sekmeyi kendi karariyla oldurur.
+// (9 Eylul 2026'da olculdu: FILE_DATA deposu bos.)
+//
+// Cozum: dosya sistemi sirandan (bellekte) kaliyor, kaliciligi ANA IS
+// PARCACIGI yapiyor. Isci kayit yazilinca dosyayi SENKRON okuyup
+// (`FS.readFile` senkron) mesajla gonderiyor; ana is parcacigi bloke
+// olmadigi icin IndexedDB'ye rahatca yaziyor. Beklemeye gerek yok.
+function kayitlariKur(kayitlar) {
   py.FS.mkdirTree("/kayitlar");
-  py.FS.mount(py.FS.filesystems.IDBFS, {}, "/kayitlar");
-  await new Promise((c, r) => py.FS.syncfs(true, (e) => (e ? r(e) : c())));
+  for (const k of kayitlar || []) {
+    try {
+      py.FS.writeFile("/kayitlar/" + k.ad, k.icerik);
+    } catch (err) {
+      bildir({ tur: "durum", metin: "Bir kayıt okunamadı: " + k.ad });
+    }
+  }
 }
 
-async function kayitlariYaz() {
-  await new Promise((c, r) => py.FS.syncfs(false, (e) => (e ? r(e) : c())));
+function kayitBildir(yol, silindi) {
+  const ad = String(yol).split("/").pop();
+  if (silindi) {
+    bildir({ tur: "kayit", ad: ad, silindi: true });
+    return;
+  }
+  try {
+    // Metin olarak okunuyor: kayitlar JSON ve IndexedDB'de de metin
+    // olarak duruyor -- ikili veriye gerek yok.
+    bildir({ tur: "kayit", ad: ad,
+             icerik: py.FS.readFile(String(yol), { encoding: "utf8" }) });
+  } catch (err) {
+    bildir({ tur: "durum", metin: "Kayıt yazılamadı: " + ad });
+  }
 }
 
 const BASLANGIC = `
@@ -74,7 +112,7 @@ os.environ["OYUN_TEMIZLEME"] = "0"
 import json
 
 import kopru
-from oyun.motor import ag, terminal as ekran
+from oyun.motor import ag, durum as kayit_defteri, terminal as ekran
 
 # Sinif sunucusu adresi. Dagitimin ayari; ogrenci yazmaz. Bos ise ag
 # kapalidir ve oyun tek basina calisir (bkz. mobil/ayarlar.json).
@@ -125,11 +163,31 @@ class TarayiciAgi:
             return None
 
 
+kayit_defteri.kayit_kancasi_ata(kopru.kayit_bildir)
+
 ag.ag_ata(TarayiciAgi())
 if AG_SUNUCUSU:
     ag.sunucu_ata(AG_SUNUCUSU)
 
-ekran.kabuk_ata(TarayiciKabugu())
+class OlayliTarayiciKabugu(TarayiciKabugu):
+    """Meridyen OS icin: metin satiri yerine yapisal olay (bkz. MERIDYEN_OS.md).
+
+    olay yontemi oldugu icin terminal islevleri olay gonderir. Eski
+    sayfa (mobil/index.html) bu sinifi HIC kullanmaz: sayfa basla
+    mesajinda olayli:true gondermedikce takilan kabuk eskisidir.
+    """
+
+    def olay(self, veri):
+        kopru.olay(json.dumps(veri, ensure_ascii=False))
+
+    def bas(self, satir):
+        self.olay({"t": "satir", "metin": str(satir)})
+
+    def temizle(self):
+        return True
+
+
+ekran.kabuk_ata(OlayliTarayiciKabugu() if kopru.olayli() else TarayiciKabugu())
 "hazir"
 `;
 
@@ -139,13 +197,14 @@ onmessage = async (e) => {
     if (m.tur === "basla") {
       kilit = new Int32Array(m.kilit);
       tampon = new Uint8Array(m.tampon);
+      olayli = m.olayli === true;
       bildir({ tur: "durum", metin: "Oyun motoru indiriliyor…" });
       py = await loadPyodide();
       bildir({ tur: "durum", metin: "Oyun dosyaları açılıyor…" });
       const zip = await (await fetch("oyun_paketi.zip")).arrayBuffer();
       py.unpackArchive(zip, "zip");
       bildir({ tur: "durum", metin: "Kayıtlar okunuyor…" });
-      await kayitlariYukle();
+      kayitlariKur(m.kayitlar);
       // Sinif sunucusu ayari. Dosya yoksa ag kapali kalir -- oyun yine
       // calisir, yalnizca el kaldirma olmaz.
       try {
@@ -159,8 +218,12 @@ onmessage = async (e) => {
         satir_bas: (s) => bildir({ tur: "satir", satir: String(s) }),
         ekrani_temizle: () => bildir({ tur: "temizle" }),
         ekran_genisligi: () => ekranGenisligi,
+        olayli: () => olayli,
+        olay: (s) => bildir({ tur: "olay", veri: JSON.parse(String(s)) }),
         ag_istek: agIstek,
         sinif_sunucusu: () => sinifSunucusu,
+        // Kayit yazilir yazilmaz haber ver; bekleme YOK (bkz. yukarisi).
+        kayit_bildir: kayitBildir,
       });
       py.runPython(BASLANGIC);
       bildir({ tur: "hazir" });
@@ -168,14 +231,10 @@ onmessage = async (e) => {
       try {
         py.runPython("from oyun.motor import oyun as _o; _o.basla()");
       } finally {
-        await kayitlariYaz();
         bildir({ tur: "bitti" });
       }
     } else if (m.tur === "genislik") {
       ekranGenisligi = Math.max(30, Math.min(92, m.deger | 0));
-    } else if (m.tur === "kaydet") {
-      // Ogrenci sekmeyi kapatirsa kayip olmasin diye ara sira cagrilir.
-      if (py) await kayitlariYaz();
     }
   } catch (err) {
     bildir({ tur: "hata", mesaj: String(err && err.message ? err.message : err) });

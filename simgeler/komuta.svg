@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Görev Masası">
+<title>Görev Masası</title>
+<rect x="4" y="4" width="56" height="56" rx="16" fill="#13213a" stroke="#c9a14a" stroke-width="1.5"/>
+<rect x="20" y="52" width="24" height="3" rx="1.5" fill="#e8c872"/>
+<g fill="none" stroke="#c9a14a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="18" y="18" width="28" height="28" rx="3"/>
+<rect x="26" y="15" width="12" height="7" rx="2" fill="#e8c872"/>
+<path d="M24 28 H40 M24 34 H36"/>
+<path d="M24 42 L27 45 L33 39"/>
+</g>
+</svg>

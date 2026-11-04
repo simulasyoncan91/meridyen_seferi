@@ -1,0 +1,274 @@
+{
+  "surum": 1,
+  "aciklama": "KABA ve YAKLAŞIK tarihî çokgenler. Elle çizilmiştir; hiçbir hazır tarihî sınır veri setinden alınmamıştır. Çokgenler kıyı çizgisine kırpılarak gösterilir. Koordinat: [boylam, enlem].",
+  "donemler": [
+    {
+      "id": "mo3-hunlar",
+      "etiket": "MÖ 3. yy",
+      "kisa": "Hunlar",
+      "baslik": "Asya Hun Devleti",
+      "yil": "yaklaşık MÖ 209 – MÖ 174 (Mete Han dönemi)",
+      "bbox": [60, 22, 135, 62],
+      "belirsizlik": "yüksek",
+      "alanlar": [
+        {"ad": "Hun Devleti'nin yaklaşık yayılma alanı", "tur": "ana",
+         "cokgen": [[88,51],[98,54],[108,54],[118,52],[124,48],[122,43],[116,41],[110,40],[104,37.5],[98,38],[92,40],[84,41],[80,42.5],[80,47],[84,49.5]]},
+        {"ad": "Han Çin'i (kaba)", "tur": "baska",
+         "cokgen": [[98,34],[104,39.5],[110,40],[118,40],[122,39],[122,30],[121,23],[108,21],[100,23],[98,28]]}
+      ],
+      "yerler": [
+        {"ad": "Ötüken / Orhun çevresi", "x": 102, "y": 47.5},
+        {"ad": "Ordos", "x": 108, "y": 39.5},
+        {"ad": "Çin Seddi hattı (kaba)", "x": 112, "y": 41}
+      ],
+      "ozet": "Mete Han, Hun boylarını bir araya getirip doğuda Tung-hu'ları, batıda Yüeçileri sıkıştırarak bozkırda büyük bir kavim birliği kurdu. Kuzeyde Çin'in Han hanedanıyla mücadele ve anlaşma (barış ve akrabalık, yani 'heqin') dönemi yaşandı.",
+      "sinir_notu": "Hunlar hakkındaki bilgilerin çoğu, rakipleri olan Çinlilerin kayıtlarından (örneğin Sima Qian'ın Shiji'si) gelir. Hunların kendi yazılı belgesi yoktur. Üstelik göçebe bir devlette 'sınır' çizgi değil, otlaklar ve bağlı boylar üzerindeki hâkimiyettir; bu yüzden aşağıdaki şekil yalnızca genel bir fikir verir. Kıtanın içlerinde kesin sınırı gösteren bir kaynak bulunmaz."
+    },
+    {
+      "id": "ms6-gokturkler",
+      "etiket": "MS 6. yy",
+      "kisa": "Göktürkler",
+      "baslik": "Göktürk (Kök Türk) Kağanlığı",
+      "yil": "552'den itibaren, 6. yüzyılın sonu (Bumin/İstemi dönemi)",
+      "bbox": [20, 20, 135, 62],
+      "belirsizlik": "yüksek",
+      "alanlar": [
+        {"ad": "Göktürk Kağanlığı'nın yaklaşık etki alanı", "tur": "ana",
+         "cokgen": [[126,50],[112,53.5],[96,53],[78,53],[62,52],[50,50],[44,47],[48,43],[56,41],[62,37.5],[70,36.5],[76,38],[80,39],[88,40.5],[100,41],[110,42.5],[118,44],[124,45]]},
+        {"ad": "Çin devletleri (kaba)", "tur": "baska",
+         "cokgen": [[98,35],[104,39.5],[112,40.5],[120,41],[122,33],[120,25],[110,21],[100,24]]},
+        {"ad": "Sasani İmparatorluğu (kaba)", "tur": "baska",
+         "cokgen": [[44,37.5],[44,30],[48,28],[54,25.5],[60,25],[62,29],[62,36.5],[56,38],[50,38.5]]},
+        {"ad": "Bizans (Doğu Roma) (kaba)", "tur": "baska",
+         "cokgen": [[20,36],[20,44],[29,45],[40,42.5],[43,40],[40,37],[36,31.5],[33,31],[24,31.5],[20,33]]}
+      ],
+      "yerler": [
+        {"ad": "Ötüken", "x": 102, "y": 47.5},
+        {"ad": "Altay Dağları", "x": 88, "y": 49},
+        {"ad": "Aral–Hazar çevresi", "x": 58, "y": 45}
+      ],
+      "ozet": "552'de Bumin Kağan, Cücen (Avar) hâkimiyetine son verip Göktürk Kağanlığı'nı kurdu; kardeşi İstemi batı kanadını yönetti. Kağanlık kısa sürede Moğolistan'dan Karadeniz'in kuzeyine uzanan bir bozkır kuşağında etkili oldu. 583 civarında Doğu ve Batı olarak ikiye ayrıldı.",
+      "sinir_notu": "6. yüzyıl için elimizde Çin ve Bizans kaynakları var. Türklerin kendi yazıtları ise (Orhun Yazıtları) ancak yaklaşık 150 yıl sonraya, 8. yüzyıla ait ve geçmişi kısaca özetler. Göçebe bir devlette sınır çizgisi yoktur; devlet boyların bağlılığına dayanır ve kağanlar arası paylaşım sürekli değişir. Batı kanadının sınırı hakkında özellikle çok az güvenilir bilgi vardır; harita bu yüzden çok geniş ve yuvarlak çizilmiştir."
+    },
+    {
+      "id": "ms8-uygurlar",
+      "etiket": "MS 8. yy",
+      "kisa": "Uygurlar",
+      "baslik": "Uygur Kağanlığı",
+      "yil": "744 – 840",
+      "bbox": [60, 28, 135, 62],
+      "belirsizlik": "yüksek",
+      "alanlar": [
+        {"ad": "Uygur Kağanlığı'nın yaklaşık etki alanı", "tur": "ana",
+         "cokgen": [[88,52],[100,54],[112,53],[121,49],[117,44],[108,41.5],[98,41.5],[90,43.5],[84,44.5],[84,49]]},
+        {"ad": "Tang Çin'i (kaba)", "tur": "baska",
+         "cokgen": [[98,33],[104,39],[112,40],[122,40],[122,30],[120,22],[108,21],[100,23],[97,28]]}
+      ],
+      "yerler": [
+        {"ad": "Ordu Balık (Karabalgasun)", "x": 102.8, "y": 47.2},
+        {"ad": "Ötüken", "x": 102, "y": 47.5}
+      ],
+      "ozet": "744'te Göktürk'ün yıkılmasından sonra Uygurlar Orhun havzasında kağanlık kurdu, Tang Çin'ine askerî yardım yaptı ve 762 civarında Mani dinini benimsedi. Başkenti Ordu Balık'tı. 840'ta Kırgızlar kağanlığa son verdi; Uygurlar Doğu Türkistan'a göç etti.",
+      "sinir_notu": "Uygurlar için Çin kaynaklarına ek olarak kendi yazıtları (Şine-Usu, Tes, Terhin) vardır ve Ordu Balık'ın yeri kazılarla bilinir; yine de sınırı gösteren bir harita ya da vergi defteri yoktur. Çizilen şekil, boyların bağlı olduğu bölgelere göre yaklaşıktır."
+    },
+    {
+      "id": "ms11-bselcuklu",
+      "etiket": "MS 11. yy",
+      "kisa": "Büyük Selçuklu",
+      "baslik": "Büyük Selçuklu Devleti",
+      "yil": "yaklaşık 1090 (Melikşah dönemi, devletin en geniş zamanı)",
+      "bbox": [24, 22, 82, 50],
+      "belirsizlik": "orta",
+      "alanlar": [
+        {"ad": "Büyük Selçuklu Devleti ve bağlı beylikler (yaklaşık)", "tur": "ana",
+         "cokgen": [[34,37],[36,32],[40,30],[44,29],[48,29.5],[52,27],[57,25.5],[61,26],[66,29],[67,33],[70,37],[72,39],[74,40],[70,41.5],[64,43],[60,42.5],[56,41.5],[54,40],[50,40.5],[46,41.5],[42,41.5],[38,40.5],[34,38.5]]},
+        {"ad": "Bizans (kaba)", "tur": "baska",
+         "cokgen": [[20,36],[20,44],[29,45],[36,42],[34,38.5],[30,36],[24,35]]},
+        {"ad": "Fatımi Halifeliği (Mısır) (kaba)", "tur": "baska",
+         "cokgen": [[26,31],[26,22],[34,22],[35,28],[34.5,31.2]]}
+      ],
+      "yerler": [
+        {"ad": "Malazgirt (1071)", "x": 42.54, "y": 39.14},
+        {"ad": "İsfahan", "x": 51.67, "y": 32.65},
+        {"ad": "Bağdat", "x": 44.37, "y": 33.31},
+        {"ad": "Nişabur", "x": 58.8, "y": 36.2},
+        {"ad": "Merv", "x": 62.2, "y": 37.6}
+      ],
+      "ozet": "Tuğrul Bey 1040'ta Dandanakan'da Gazneliler'i yenerek devleti kurdu, 1055'te Bağdat'a girdi. Alparslan 1071'de Malazgirt'te Bizans'ı yendi ve Anadolu'nun kapıları Türkmenlere açıldı. Melikşah döneminde (1072-1092) devlet Orta Asya'dan Suriye'ye uzanan en geniş çizgisine ulaştı.",
+      "sinir_notu": "Kaynaklar çoktur (İbnü'l-Esir, Nizamülmülk'ün Siyasetname'si, Bizans yazarları) ama bunlar saray ve ordu olayları üzerinedir; kesin bir sınır çizgisi vermezler. Devlet, hanedan üyeleri (melikler) ve bağlı beylikler arasında paylaşıldığı ve sınır sürekli kaydığı için tek bir tarih için tek bir sınır yoktur. Özellikle Anadolu'daki hâkimiyet, Türkmen beylerinin akınlarına dayanıyordu ve düzenli bir idare sayılmaz."
+    },
+    {
+      "id": "ms13-anadolu-selcuklu",
+      "etiket": "MS 13. yy",
+      "kisa": "Anadolu Selçuklu",
+      "baslik": "Anadolu Selçuklu Devleti",
+      "yil": "yaklaşık 1240 (Kösedağ 1243 öncesi)",
+      "bbox": [22, 33, 48, 44],
+      "belirsizlik": "orta",
+      "alanlar": [
+        {"ad": "Anadolu Selçuklu Devleti (yaklaşık)", "tur": "ana",
+         "cokgen": [[27,38],[29.5,37],[32,36],[34,36.2],[36,37.6],[38.2,38.4],[39.5,38.8],[41.2,39.6],[40.8,40.6],[38,41.2],[35,42.3],[33,42.2],[31.5,41],[29.8,39.8],[28,38.8]]},
+        {"ad": "İznik Rum İmparatorluğu (Bizans devamı) (kaba)", "tur": "baska",
+         "cokgen": [[25.8,39.2],[25.8,41.2],[27.2,41.8],[30.2,41],[30,39.5],[28.6,38.2],[26.8,37.8]]},
+        {"ad": "Kilikya Ermeni Krallığı (kaba)", "tur": "baska",
+         "cokgen": [[34,36.4],[34.5,37.8],[36.6,38.2],[36.8,37],[35.6,36.4]]},
+        {"ad": "Trabzon Rum Devleti (kaba)", "tur": "baska",
+         "cokgen": [[37.5,41.1],[41,41.2],[41,40.4],[38.2,40.4]]}
+      ],
+      "yerler": [
+        {"ad": "Konya", "x": 32.49, "y": 37.87},
+        {"ad": "Kösedağ (1243)", "x": 37.6, "y": 40.0},
+        {"ad": "Sinop", "x": 35.15, "y": 42.03},
+        {"ad": "Alanya (Alaiyye)", "x": 32.0, "y": 36.54}
+      ],
+      "ozet": "Süleymanşah'ın kurduğu devlet Konya'yı başkent yaptı. I. Alâeddin Keykubad (1220-1237) döneminde Akdeniz'de Alanya, Karadeniz'de Sinop'a ulaşıldı; kervansaraylar, medreseler ve Ahilik gelişti. 1243'te Kösedağ'da Moğollara yenilen devlet Moğol (İlhanlı) vesayeti altına girdi.",
+      "sinir_notu": "Anadolu Selçuklu için İbn Bibi (Selçukname) gibi Selçuklu kaynakları, Bizans, Ermeni ve Moğol yazarları bulunur; vakıf kitabeleri ve kervansaraylar yer yer sınırın nereye yayıldığını gösterir. Yine de doğuda ve güneyde komşu beyliklerle sınır sürekli değiştiği ve uç bölgelerinde Türkmen beyleri yarı bağımsız olduğu için harita yaklaşıktır. Ayrıca dönemin hangi yıl için çizildiği de seçime bağlıdır."
+    },
+    {
+      "id": "1453-osmanli",
+      "etiket": "1453",
+      "kisa": "İstanbul'un fethi",
+      "baslik": "Osmanlı Devleti, 1453",
+      "yil": "29 Mayıs 1453 dolayı",
+      "bbox": [14, 33, 50, 50],
+      "belirsizlik": "orta",
+      "alanlar": [
+        {"ad": "Osmanlı Devleti (yaklaşık)", "tur": "ana",
+         "cokgen": [[20,40],[19.8,42.5],[21.5,44.2],[25,43.9],[28.8,44.4],[29.5,42],[31.5,41.5],[34,42],[36.5,41.5],[36.8,39.5],[34.5,38.8],[32,38.4],[30.5,37],[28,36.4],[26,37.5],[25.5,38.5],[23.3,36.5],[21.5,37.5],[20,38.8]]},
+        {"ad": "Karamanoğulları Beyliği (kaba)", "tur": "baska",
+         "cokgen": [[31.5,38.4],[34,38.8],[35,37.8],[34,36.3],[32.5,36.2],[31.5,37.2]]},
+        {"ad": "Trabzon Rum İmparatorluğu (kaba)", "tur": "baska",
+         "cokgen": [[37.5,41.1],[40.8,41.3],[40.8,40.4],[38.2,40.4]]},
+        {"ad": "Sırbistan Despotluğu (kaba)", "tur": "vasal",
+         "cokgen": [[19.8,42.5],[19.5,44.5],[21.8,45],[22.5,43.2]]}
+      ],
+      "yerler": [
+        {"ad": "İstanbul (Konstantiniyye)", "x": 28.97, "y": 41.01},
+        {"ad": "Edirne (başkent)", "x": 26.56, "y": 41.68},
+        {"ad": "Bursa", "x": 29.06, "y": 40.19}
+      ],
+      "ozet": "II. Mehmed, 29 Mayıs 1453'te İstanbul'u fethetti; Bizans İmparatorluğu sona erdi. Devletin merkezi iki kıtaya yayılan Rumeli ve Anadolu topraklarıydı; Anadolu'nun doğusunda ve ortasında bazı beylikler hâlâ bağımsızdı.",
+      "sinir_notu": "Osmanlı arşivi 15. yüzyılda hâlâ gelişmekteydi: sayım (tahrir) defterlerinin çoğu bu tarihten biraz sonraya aittir. Sırbistan, Eflak gibi vergi veren (haraçgüzar) devletlerin Osmanlı'ya bağlılık derecesi dönemden döneme değişir; 'sınır' çoğu zaman kaleler ve akıncı bölgeleriyle belirlenirdi. Harita bu yüzden kaba bir görüntü verir."
+    },
+    {
+      "id": "1683-osmanli",
+      "etiket": "1683",
+      "kisa": "En geniş sınırlar",
+      "baslik": "Osmanlı Devleti, 17. yüzyılın sonu (II. Viyana Kuşatması)",
+      "yil": "1683 civarı",
+      "bbox": [-5, 22, 62, 52],
+      "belirsizlik": "orta",
+      "alanlar": [
+        {"ad": "Osmanlı Devleti (yaklaşık)", "tur": "ana",
+         "cokgen": [[16,45.8],[17.2,47.8],[18.3,48.3],[20.5,49],[22.8,48.9],[24.5,48.2],[26,48.6],[27.2,48.8],[28.5,48.3],[30,46.5],[31.5,45.5],[34,44.2],[38,43.5],[40.5,44],[42,43.5],[43,41.8],[44,40.5],[44.5,39.5],[44.2,38],[45,37],[45.8,35.6],[46,34],[47.8,32.5],[48.5,30.5],[47.7,29.4],[43,28.5],[41.5,25],[42.2,20],[42.8,16.8],[40,16],[37.5,19.5],[34.2,27.6],[33,22],[25,22.5],[15,26],[9.5,30.2],[9,33.5],[6,34.5],[1,34.8],[-1.8,35],[-1.8,37.5],[8,38.5],[12,38],[16,39],[18.5,40.5],[16.5,43.5],[16,45.8]]},
+        {"ad": "Kırım Hanlığı (vasal) (kaba)", "tur": "vasal",
+         "cokgen": [[32.2,44.3],[36.7,44.3],[38.3,47],[35,48.4],[31.2,46.8]]},
+        {"ad": "Habsburg / Venedik (kaba)", "tur": "baska",
+         "cokgen": [[8,45],[8,48],[17,48.4],[17,45.5],[14,44.5],[12.5,43]]},
+        {"ad": "Safevi İranı (kaba)", "tur": "baska",
+         "cokgen": [[44.5,39.5],[48,40],[56,38],[61,37],[62,30],[56,26],[50,27.5],[48.5,30.5],[46,34],[44.2,38]]}
+      ],
+      "yerler": [
+        {"ad": "Viyana (kuşatma, 1683)", "x": 16.37, "y": 48.21},
+        {"ad": "İstanbul", "x": 28.97, "y": 41.01},
+        {"ad": "Kahire", "x": 31.24, "y": 30.04},
+        {"ad": "Bağdat", "x": 44.37, "y": 33.31}
+      ],
+      "ozet": "17. yüzyıl sonunda Osmanlı toprakları Orta Avrupa'dan Basra Körfezi'ne, Karadeniz'in kuzeyinden Kuzey Afrika'ya uzanıyordu. 1683'teki İkinci Viyana Kuşatması başarısız oldu ve 1699 Karlofça Antlaşması ile toprak kayıpları başladı.",
+      "sinir_notu": "'En geniş sınır' kavramı kaynaktan kaynağa değişir: bazı kitaplar Kanuni dönemini (16. yy), bazıları 17. yy'ın ikinci yarısını işaret eder. Kuzey Afrika'da (Cezayir, Tunus, Trablus) Osmanlı bağı çoğu zaman ad ve vergi düzeyinde kaldığı, Kırım Hanlığı ve Eflak-Boğdan gibi bölgeler ise vasal olduğu için bunları 'tam sınır içi' saymak yaklaşıktır. Sahra içlerindeki sınırın hiçbir kesinliği yoktur."
+    },
+    {
+      "id": "1914-osmanli",
+      "etiket": "1914",
+      "kisa": "I. Dünya Savaşı öncesi",
+      "baslik": "Osmanlı Devleti, 1914 öncesi",
+      "yil": "1914 (Balkan Savaşları'ndan sonra)",
+      "bbox": [20, 10, 62, 46],
+      "belirsizlik": "düşük",
+      "alanlar": [
+        {"ad": "Osmanlı Devleti (yaklaşık)", "tur": "ana",
+         "cokgen": [[26,40.6],[26.6,41.8],[28.1,41.6],[31.5,41.4],[41.6,41.6],[43.5,40.5],[44.4,39.6],[44.2,38.2],[44.6,37.2],[46,35.5],[46,33.5],[47.6,32.4],[48,30.5],[47,29.4],[44,29.4],[39,31],[35,29.5],[34.6,31.4],[36,36.8],[34,36.4],[28,36.3],[26,38]]},
+        {"ad": "Arabistan'daki Osmanlı toprakları (kaba)", "tur": "ana",
+         "cokgen": [[38.5,29.5],[41,27.5],[42.5,24],[43.5,20],[44,17],[45,15],[44.5,13],[43,12.5],[41,15],[39,21],[36.5,26],[35,29]]}
+      ],
+      "yerler": [
+        {"ad": "İstanbul", "x": 28.97, "y": 41.01},
+        {"ad": "Medine", "x": 39.6, "y": 24.5},
+        {"ad": "Bağdat", "x": 44.37, "y": 33.31},
+        {"ad": "Şam", "x": 36.3, "y": 33.5}
+      ],
+      "ozet": "1912-1913 Balkan Savaşları'ndan sonra Osmanlı Rumeli'de Edirne ve çevresiyle yetindi (Midye-Enez hattı). Anadolu, Suriye, Irak ve Arap Yarımadası'nın batısı devletin elindeydi; Mısır 1882'den beri İngiliz işgali altındaydı, Libya 1912'de İtalya'ya geçmişti.",
+      "sinir_notu": "Bu dönem için kesin devlet sınırları vardır (antlaşmalar ve sınır komisyonları); yine de Arabistan içlerinde Osmanlı hâkimiyeti kıyı ve şehirlerle sınırlıydı, Kuveyt ve Katar gibi yerlerin bağı belirsizdi. Harita bunu çok basitleştirir."
+    },
+    {
+      "id": "1920-sevr",
+      "etiket": "1920",
+      "kisa": "Sevr",
+      "baslik": "Sevr Antlaşması'nın öngördüğü paylaşım",
+      "yil": "10 Ağustos 1920",
+      "bbox": [24, 34, 46, 44],
+      "belirsizlik": "orta",
+      "alanlar": [
+        {"ad": "Osmanlı Devleti'ne bırakılan alan (yaklaşık)", "tur": "ana",
+         "cokgen": [[26,36],[26,42],[34,42.5],[41,41.5],[44,40],[44,36.5],[36,36],[30,36]]},
+        {"ad": "Yunan yönetimi: İzmir bölgesi", "tur": "baska",
+         "cokgen": [[26,39.8],[28.5,39.8],[29,38.3],[28.5,37.5],[27,37.2],[26,38]]},
+        {"ad": "Yunanistan'a bırakılan Doğu Trakya", "tur": "baska",
+         "cokgen": [[25.5,39.9],[25.5,42.3],[28.2,42.3],[28.3,41.3],[26.5,40]]},
+        {"ad": "İtalyan nüfuz bölgesi", "tur": "baska",
+         "cokgen": [[27,37.2],[30,38.5],[32,38],[33,36.3],[30,36],[28,36.7]]},
+        {"ad": "Fransız nüfuz bölgesi", "tur": "baska",
+         "cokgen": [[34,37.5],[34.5,38],[36.5,38.8],[38.5,38],[39.5,37],[37,36],[36,36.2],[35.5,36.5]]},
+        {"ad": "Ermenistan (sınırı Wilson hakemliğine bırakıldı)", "tur": "iddia",
+         "cokgen": [[39.5,41.2],[41.5,41.5],[43.5,41],[44.2,39.5],[43.5,38],[42,38.3],[40.5,39.2]]},
+        {"ad": "Özerk Kürt bölgesi (plan, kesinleşmedi)", "tur": "iddia",
+         "cokgen": [[38.5,39.3],[40.5,39.4],[43,38.2],[44.2,37.3],[43,36.8],[38.5,37.2]]}
+      ],
+      "yerler": [
+        {"ad": "İstanbul ve Boğazlar (uluslararası denetim)", "x": 29, "y": 41},
+        {"ad": "Ankara (TBMM, 23 Nisan 1920)", "x": 32.86, "y": 39.93},
+        {"ad": "İzmir", "x": 27.14, "y": 38.42}
+      ],
+      "ozet": "Sevr Antlaşması Osmanlı topraklarını büyük ölçüde paylaştırıyordu: Doğu Trakya ve İzmir Yunanistan'a, güneyde Fransız ve İtalyan nüfuz bölgeleri, doğuda bir Ermenistan ve olası bir Kürt özerkliği öngörülüyordu; Boğazlar uluslararası denetime giriyordu. Antlaşma Ankara'daki TBMM tarafından tanınmadı ve yürürlüğe girmedi.",
+      "sinir_notu": "Sevr'in metni bazı sınırları açıkça yazmaz (Ermenistan sınırını ABD Başkanı Wilson'ın hakemliğine bırakır; Kürt bölgesi için özerklik öngörür, sonrasını Milletler Cemiyeti'nin onayına bağlar). Bu yüzden çizimler plan niteliğinde ve yaklaşıktır. Ayrıca antlaşma uygulanmadığı için hiçbir zaman gerçek bir sınır olmamıştır."
+    },
+    {
+      "id": "1923-lozan",
+      "etiket": "1923",
+      "kisa": "Lozan",
+      "baslik": "Lozan Antlaşması sonrası Türkiye",
+      "yil": "24 Temmuz 1923",
+      "bbox": [24, 34, 46, 44],
+      "belirsizlik": "düşük",
+      "alanlar": [
+        {"ad": "Türkiye (1923; Hatay hariç)", "tur": "ana", "iller_haric": [31]}
+      ],
+      "yerler": [
+        {"ad": "Ankara", "x": 32.86, "y": 39.93},
+        {"ad": "Boğazlar (askerden arındırılmış bölge)", "x": 29, "y": 41},
+        {"ad": "Musul (sorun, 1926'da çözüldü)", "x": 43.12, "y": 36.34},
+        {"ad": "Hatay (1939'da katıldı)", "x": 36.16, "y": 36.2}
+      ],
+      "ozet": "Lozan Antlaşması ile Türkiye'nin doğu ve batı sınırları büyük ölçüde bugünkü hâline geldi: Doğu Trakya, İzmir ve Anadolu Türkiye'de kaldı, kapitülasyonlar kalktı, Boğazlar askerden arındırıldı. Musul sorunu ertelendi (1926'da çözüldü), Hatay 1939'da katıldı.",
+      "sinir_notu": "Bu harita bugünkü il sınırlarından Hatay çıkarılarak çizilmiştir; 1923'te il sınırları tam olarak bugünküler değildi ve Suriye sınırının bazı kesimleri sonradan değişti. Bu yüzden yalnızca genel şekil içindir."
+    },
+    {
+      "id": "bugun",
+      "etiket": "Bugün",
+      "kisa": "Günümüz",
+      "baslik": "Türkiye Cumhuriyeti (günümüz)",
+      "yil": "bugün",
+      "bbox": [24, 34, 46, 44],
+      "belirsizlik": "düşük",
+      "alanlar": [
+        {"ad": "Türkiye Cumhuriyeti (81 il)", "tur": "ana", "iller_haric": []}
+      ],
+      "yerler": [
+        {"ad": "Ankara", "x": 32.86, "y": 39.93},
+        {"ad": "İstanbul", "x": 28.97, "y": 41.01}
+      ],
+      "ozet": "Günümüzde Türkiye 81 ile bölünmüştür ve 7 coğrafi bölgesi vardır. Sınırlar uluslararası antlaşmalarla çizilmiştir.",
+      "sinir_notu": "Günümüz için kesin ve doğrulanabilir bilgi vardır; harita Natural Earth (kamu malı) verisinden sadeleştirilmiştir ve ayrıntılı bir resmî harita yerine geçmez."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Haberci">
+<title>Haberci</title>
+<rect x="4" y="4" width="56" height="56" rx="16" fill="#13213a" stroke="#c9a14a" stroke-width="1.5"/>
+<rect x="20" y="52" width="24" height="3" rx="1.5" fill="#d9765f"/>
+<g fill="none" stroke="#c9a14a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="16" y="22" width="32" height="22" rx="2"/>
+<path d="M16 24 L32 36 L48 24"/>
+<circle cx="44" cy="20" r="3.5" fill="#d9765f"/>
+</g>
+</svg>

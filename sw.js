@@ -2,12 +2,19 @@
 //
 // SURUM: uygulama dosyalarindan biri degisince buradaki sayiyi artir.
 // Artirmazsan eski onbellek silinmez; sorun cikarmaz ama gereksiz yer tutar.
-const AD = "meridyen-v2";
+const AD = "meridyen-v5";
 
 const KENDI = [
   "./", "./index.html", "./isci.js", "./oyun_paketi.zip",
   "./manifest.webmanifest", "./simge.svg", "./simge-192.png", "./simge-512.png",
   "./ayarlar.json",
+  // Meridyen OS (yayinda koke girer; depoda bu dosyalar yoksa add() sessizce atlanir)
+  "./eski.html", "./os.css", "./os.js", "./telsiz.js", "./tasiyici.js", "./ornek_olaylar.json", "./atlas.js",
+  "./atlas/dunya.json", "./atlas/cevre.json", "./atlas/turkiye.json", "./atlas/merkezler.json", "./atlas/donemler.json", "./atlas/konu_donem.json",
+  "./simgeler/logo.svg", "./simgeler/kilit.svg", "./simgeler/usta.svg", "./simgeler/komuta.svg",
+  "./simgeler/kronograf.svg", "./simgeler/tesis.svg", "./simgeler/gunluk.svg", "./simgeler/iz.svg",
+  "./simgeler/harita.svg", "./simgeler/kisa.svg", "./simgeler/ayar.svg", "./simgeler/program.svg",
+  "./simgeler/geri.svg", "./simgeler/devret.svg", "./simgeler/arsiv.svg", "./simgeler/posta.svg",
 ];
 
 self.addEventListener("install", (e) => {

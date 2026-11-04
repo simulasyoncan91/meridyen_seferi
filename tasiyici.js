@@ -106,8 +106,58 @@
       istek.onerror = function () { sik(istek.error); };
     });
   }
+  // ESKI SURUM KAYITLARININ TASINMASI (9 Eylul yayini -> bu surum)
+  // -------------------------------------------------------------
+  // 9 Eylul yayini kayitlari Pyodide IDBFS ile tutuyordu: IndexedDB adi
+  // "/kayitlar", deposu "FILE_DATA", anahtar "/kayitlar/<ad>", deger
+  // {contents: Uint8Array, mode, timestamp}. Bu surum "meridyen-kayitlar"
+  // kullaniyor. Tasima olmadan o surumu telefona kuran ogrenci guncelleme
+  // gelince sifirdan baslardi. Burada eski depoda olup yenide OLMAYAN her
+  // kayit bir kez kopyalanir; yenide ayni adli kayit varsa ona dokunulmaz.
+  // Eski veritabani SILINMEZ (geri donus yolu kalsin). Tasima bitince
+  // localStorage'a isaret konur; boylece yeni surumde silinen bir kayit
+  // eski depodan geri dirilmez.
+  var GOC_ISARETI = 'meridyen-idbfs-tasindi';
+  function eskiKayitlariTasi(yeniDb, depoAdi) {
+    try { if (localStorage.getItem(GOC_ISARETI)) return Promise.resolve(0); } catch (e) { /* depo yok */ }
+    return new Promise(function (coz) {
+      var istek;
+      try { istek = indexedDB.open('/kayitlar'); } catch (e) { coz(0); return; }
+      istek.onupgradeneeded = function () { istek.transaction.abort(); };  // eski veritabani yok: olusturma
+      istek.onerror = function () { coz(0); };
+      istek.onsuccess = function () {
+        var eski = istek.result;
+        if (!eski.objectStoreNames.contains('FILE_DATA')) { eski.close(); coz(0); return; }
+        var okuma = eski.transaction('FILE_DATA', 'readonly').objectStore('FILE_DATA');
+        var anahtarlar = okuma.getAllKeys(), degerler = okuma.getAll();
+        degerler.onerror = function () { eski.close(); coz(0); };
+        degerler.onsuccess = function () {
+          eski.close();
+          var bulunan = [];
+          (anahtarlar.result || []).forEach(function (yol, i) {
+            var d = degerler.result[i];
+            var m = /^\/kayitlar\/([^\/]+)$/.exec(String(yol));
+            if (!m || !d || !d.contents) return;                 // klasor girdisi ya da alt klasor
+            try { bulunan.push({ ad: m[1], icerik: new TextDecoder('utf-8').decode(d.contents) }); } catch (e) { /* okunamadi */ }
+          });
+          var islem = yeniDb.transaction(depoAdi, 'readwrite'), depo = islem.objectStore(depoAdi), sayi = 0;
+          bulunan.forEach(function (k) {
+            var var_mi = depo.count(k.ad);
+            var_mi.onsuccess = function () { if (!var_mi.result) { depo.put(k.icerik, k.ad); sayi++; } };
+          });
+          islem.oncomplete = function () {
+            try { localStorage.setItem(GOC_ISARETI, String(Date.now())); } catch (e) { /* depo yok */ }
+            coz(sayi);
+          };
+          islem.onerror = islem.onabort = function () { coz(0); };   // isaret konmaz: sonraki acilista yeniden denenir
+        };
+      };
+    });
+  }
   function kayitlariOku() {
     return kayitDeposu().then(function (db) {
+      return eskiKayitlariTasi(db, KAYIT_DEPO).then(function () { return db; });
+    }).then(function (db) {
       return new Promise(function (coz) {
         const depo = db.transaction(KAYIT_DEPO, 'readonly').objectStore(KAYIT_DEPO);
         const anahtarlar = depo.getAllKeys(), degerler = depo.getAll();

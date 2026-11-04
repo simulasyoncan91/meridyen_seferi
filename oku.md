@@ -33,7 +33,11 @@ Apache:
 
 ## Çalıştı mı, nasıl anlarım
 
-Adresi telefonda aç. Sol altta küçük bir yazı görünür:
+Adresi telefonda aç: giriş sayfası **Meridyen OS** (üssün bilgisayarı).
+Eski düz terminal görünümü `/eski.html` adresinde durur. Kayıtlar iki
+görünümde ortaktır.
+
+OS'ta açılışta üstte "Oyun motoru indiriliyor…" yazar. Sol altta küçük bir yazı görünür:
 
 * **"çevrimdışı hazır"** -> her şey tamam. Oyun telefona kaydedildi,
   bundan sonra internet olmasa da açılır.

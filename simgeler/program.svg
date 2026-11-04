@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Ders Saati">
+<title>Ders Saati</title>
+<rect x="4" y="4" width="56" height="56" rx="16" fill="#13213a" stroke="#c9a14a" stroke-width="1.5"/>
+<rect x="20" y="52" width="24" height="3" rx="1.5" fill="#7fb3d5"/>
+<g fill="none" stroke="#c9a14a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="16" y="18" width="24" height="24" rx="2"/>
+<path d="M16 25 H40 M23 16 V21 M33 16 V21"/>
+<circle cx="40" cy="40" r="8" fill="#7fb3d5"/>
+<path d="M40 36 V40 L43 42" stroke="#13213a"/>
+</g>
+</svg>

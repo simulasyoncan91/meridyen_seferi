@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<meta name="theme-color" content="#10131a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="simge-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Meridyen">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Meridyen Seferi</title>
+<style>
+ :root{--zemin:#10131a;--yazi:#e6e9ef;--vurgu:#7fd1c1;--kutu:#1a1f2b;--kenar:#2a3140}
+ *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+ html,body{margin:0;height:100%;overscroll-behavior:none}
+ body{background:var(--zemin);color:var(--yazi);
+      font:15px/1.6 ui-monospace,"SF Mono","Cascadia Mono",Consolas,monospace;
+      display:flex;flex-direction:column;height:100dvh}
+ /* [hidden] tek basina yetmiyor: display:flex onu yener. Ekran
+    goruntusunde yukleme ekrani oyunun ustunde kalmisti. */
+ #yukleme[hidden]{display:none}
+ #yukleme{flex:1;display:flex;flex-direction:column;align-items:center;
+          justify-content:center;gap:14px;padding:24px;text-align:center}
+ #yukleme h1{font-size:20px;margin:0;color:var(--vurgu);letter-spacing:.5px}
+ #durum{color:#93a0b4;font-size:14px}
+ .cubuk{width:min(280px,80vw);height:4px;background:var(--kenar);border-radius:2px;overflow:hidden}
+ .cubuk i{display:block;height:100%;width:35%;background:var(--vurgu);
+          animation:kay 1.1s ease-in-out infinite}
+ @keyframes kay{0%{margin-left:-35%}100%{margin-left:100%}}
+ #oyun{flex:1;display:none;flex-direction:column;min-height:0}
+ #ekran{flex:1;overflow-y:auto;padding:12px 8px 6px;white-space:pre;
+        overflow-x:hidden;-webkit-overflow-scrolling:touch;font-size:13px}
+ /* white-space:pre (wrap DEGIL): kutu cizimleri satir sarinca bozuluyor.
+    Genislik zaten kabuktan bildirildigi icin metin dogru olcude geliyor. */
+ @media (max-width:360px){#ekran{font-size:12px}}
+ #alt{background:var(--kutu);border-top:1px solid var(--kenar);
+      padding:10px 12px calc(10px + env(safe-area-inset-bottom))}
+ #istem{color:var(--vurgu);font-size:14px;margin-bottom:8px;min-height:21px}
+ #satir{display:flex;gap:8px}
+ input{flex:1;min-width:0;font:inherit;font-size:16px;padding:13px 12px;
+        border-radius:10px;border:1px solid #38414f;background:#0c0f15;color:var(--yazi)}
+ input:disabled{opacity:.45}
+ button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:13px 18px;
+        background:var(--vurgu);color:#08121a;min-width:82px}
+ button:active{transform:scale(.97)}
+ #tuslar{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:8px}
+ #tuslar button{padding:11px 2px;font-size:13px;font-weight:500;
+                background:var(--kenar);color:var(--yazi);min-width:0}
+ #hata{padding:20px;color:#ffd0d0;line-height:1.5;font-size:14px}
+ #gecikme{margin-top:14px;font-size:12px;color:#ffc98a;max-width:300px;
+          line-height:1.5}
+ #gecikme button, #hata button{margin-top:10px;font-size:13px;padding:10px 16px}
+ #hata details{margin-top:12px;color:#8a94a6;font-size:12px}
+ #hata details pre{white-space:pre-wrap;word-break:break-word}
+ #hata h2{color:#ff9c9c;font-size:17px}
+ #hata ol{padding-left:22px} #hata li{margin:6px 0}
+ #hata code{background:#1a1f2b;padding:2px 5px;border-radius:4px}
+ /* Cevrimdisi hazir mi? Ogretmen telefonda iki saniyede gorsun diye.
+    Kucuk ve kenarda; oyunun onune gecmemeli. */
+ #cevrimdisi{position:fixed;left:8px;bottom:6px;z-index:5;font-size:11px;
+             padding:3px 8px;border-radius:20px;opacity:.55;
+             background:var(--kenar);color:var(--yazi);border:0;min-width:0}
+ #cevrimdisi.hazir{color:#8fe3a8}
+ #cevrimdisi.degil{color:#ffc98a}
+ #depolama{position:fixed;right:8px;bottom:6px;z-index:5;font-size:11px;
+           padding:3px 8px;border-radius:20px;opacity:.75;
+           background:#3a2020;color:#ffb0b0;border:0;min-width:0}
+</style>
+</head>
+<body>
+<div id="yukleme">
+  <h1>MERİDYEN SEFERİ</h1>
+  <div class="cubuk"><i></i></div>
+  <div id="durum">başlatılıyor…</div>
+  <div style="color:#5d6b80;font-size:12px;max-width:300px">
+    İlk açılışta oyun motoru telefonuna iniyor (~10 MB).
+    Sonraki açılışlarda internet gerekmez.
+  </div>
+  <div id="gecikme" hidden></div>
+</div>
+<div id="oyun">
+  <div id="ekran"></div>
+  <div id="alt">
+    <div id="istem"></div>
+    <div id="satir">
+      <input id="girdi" autocomplete="off" autocapitalize="off" autocorrect="off"
+             spellcheck="false" enterkeyhint="send" placeholder="yaz ve gönder">
+      <button id="gonder">Gönder</button>
+    </div>
+    <div id="tuslar"></div>
+  </div>
+</div>
+<div id="hata" hidden></div>
+<button id="cevrimdisi" hidden></button>
+<button id="depolama" hidden></button>
+
+<script>
+const $=(x)=>document.getElementById(x);
+const ekranEl=$("ekran"),istemEl=$("istem"),girdiEl=$("girdi"),tuslarEl=$("tuslar");
+let satirlar=[],bekliyor=false,isci=null,k32=null,tbuf=null;
+
+// Klavye acmadan oynanabilsin: en sik kullanilan tuslar dugme olarak.
+const KISAYOL=[["1","1"],["2","2"],["3","3"],["4","4"],["5","5"],["↵",""],
+               ["ipucu","i"],["çözüm","c"],["kaynak","k"],["örnek","o"],
+               ["yardım","?"],["çık","x"]];
+KISAYOL.forEach(([ad,deger])=>{
+  const b=document.createElement("button");
+  b.textContent=ad; b.onclick=()=>yolla(deger); tuslarEl.appendChild(b);
+});
+
+function ciz(){
+  const dipte=ekranEl.scrollTop+ekranEl.clientHeight>=ekranEl.scrollHeight-40;
+  ekranEl.textContent=satirlar.join("\n");
+  if(dipte) ekranEl.scrollTop=ekranEl.scrollHeight;
+}
+function yolla(deger){
+  if(!bekliyor) return;
+  const metin=deger!==undefined?deger:girdiEl.value;
+  girdiEl.value=""; bekliyor=false;
+  istemEl.textContent="…"; girdiEl.disabled=true;
+  const b=new TextEncoder().encode(metin);
+  tbuf.set(b.subarray(0,4000),0);
+  Atomics.store(k32,1,Math.min(b.length,4000));
+  Atomics.store(k32,0,1);
+  Atomics.notify(k32,0);
+}
+$("gonder").onclick=()=>yolla();
+girdiEl.addEventListener("keydown",e=>{if(e.key==="Enter")yolla();});
+
+function karakterGenisligi(){
+  // Kac karakter sigar?
+  // DIKKAT: olcum #ekran uzerinden yapilamaz -- oyun ekrani ilk aciliista
+  // gizli (display:none) ve clientWidth 0 doner; sonuc taban degere duser
+  // ve kutular gereksiz dar cizilir. Bu yuzden BODY uzerinden olculuyor,
+  // gorunurlukten bagimsiz. (8 Eylul'de bu tuzaga dusuldu.)
+  const o=document.createElement("span");
+  o.textContent="0".repeat(20);
+  o.style.cssText="position:absolute;visibility:hidden;white-space:pre;"+
+                  "font:13px ui-monospace,'SF Mono','Cascadia Mono',Consolas,monospace";
+  document.body.appendChild(o);
+  const birim=o.getBoundingClientRect().width/20;
+  o.remove();
+  // clientWidth DOLGUYU (padding) da iceriyor; onu dusmeden hesaplarsak
+  // birkac karakter fazla cikar ve kutular tasar. Bir karakter de emniyet
+  // payi birakiyoruz (kaydirma cubugu, yuvarlama).
+  // #ekran dolgusu (padding) CSS'te 8+8; gorunmezken okunamadigi icin
+  // sabit yaziliyor. Bir karakter de emniyet payi.
+  const kullanilabilir=document.documentElement.clientWidth-16;
+  return Math.max(30,Math.floor(kullanilabilir/(birim||8))-1);
+}
+function genisligiBildir(){
+  if(isci) isci.postMessage({tur:"genislik",deger:karakterGenisligi()});
+}
+
+// AÇILAMIYORSA NE DIYECEGIZ
+// -------------------------
+// Eski mesaj teknik olarak dogruydu ve insana faydasi yoktu:
+// "Cross-Origin-Opener-Policy: same-origin". Bunu okuyan ogretmen ne
+// yapacagini bilmiyor. Iki AYRI sebep var ve cozumleri farkli:
+//
+//   1. Dosya telefona kopyalanip dogrudan acilmis (file://). En sik
+//      yapilan sey bu ve HIC calismaz -- sunucu ayari meselesi degil,
+//      sayfanin bir ADRESTEN gelmesi gerekiyor.
+//   2. Bir adresten geliyor ama sunucu basliklari vermiyor.
+//
+// Ayni mesaji ikisine de vermek, birinci gruptaki kisiyi olmayan bir
+// sunucu ayarini aramaya gonderiyordu.
+function acilamadi(){
+  // "file:" YETMIYOR. Android dosya yoneticileri yerel HTML'i cogu zaman
+  // "content://" ile aciyor, bazi onizleyiciler "data:" kullaniyor.
+  // Dogru soru "dosya mi?" degil, "bir ADRESTEN mi geldi?" -- yani
+  // http/https disindaki her sey dosyadan acilmis sayilir.
+  const dosyadan = !/^https?:$/.test(location.protocol);
+  $("yukleme").hidden=true;
+  const kutu = $("hata");
+  kutu.hidden=false;
+  kutu.innerHTML = dosyadan
+    ? '<h2 style="margin:0 0 10px">Oyun böyle açılamıyor</h2>'
+      + '<p>Dosyaya doğrudan tıklayarak açtın. Oyun sana soru sorabilmek '
+      + 'için sayfanın bir <b>adresten</b> gelmesine ihtiyaç duyuyor; '
+      + 'telefondaki dosyadan açılınca bu mümkün değil.</p>'
+      + '<p><b>Bilgisayarın varsa</b> (en kolayı):</p>'
+      + '<ol><li>Bilgisayarda <b>TELEFONDAN_OYNA.bat</b> dosyasına çift tıkla.</li>'
+      + '<li>Telefonu bilgisayarla <b>aynı kablosuz ağa</b> bağla.</li>'
+      + '<li>Ekranda yazan adresi telefonun tarayıcısına yaz.</li></ol>'
+      + '<p><b>Sınıfa dağıtacaksan</b> oyunun bir web adresinde durması '
+      + 'gerekir; bkz. <code>SINIF_KURULUMU.md</code>.</p>'
+    : '<h2 style="margin:0 0 10px">Sunucu ayarı eksik</h2>'
+      + '<p>Sayfa bir adresten geldi ama sunucu gerekli iki başlığı '
+      + 'vermiyor, bu yüzden oyun soru soramıyor.</p>'
+      + '<p>Sunucuya şunlar eklenmeli:</p>'
+      + '<pre style="white-space:pre-wrap;font-size:12px">'
+      + 'Cross-Origin-Opener-Policy: same-origin' + String.fromCharCode(10)
+      + 'Cross-Origin-Embedder-Policy: credentialless</pre>'
+      + '<p>Denemek için gelen paketteki <code>TELEFONDAN_OYNA.bat</code> '
+      + 'kullanılabilir; o bu başlıkları veriyor.</p>';
+}
+
+// KAYITLAR BURADA DURUYOR -- iscide degil
+// ---------------------------------------
+// Oyun tek bir cagri icinde kosuyor ve cevap beklerken Atomics ile
+// bloklaniyor; o yuzden iscinin olay dongusu oyun boyunca hic sira
+// almiyor ve orada eszamansiz hicbir sey (IndexedDB dahil) tamamlanamiyor.
+// Ana is parcacigi ise bos: kaliciligi o yapiyor.
+// Ayrintili gerekce isci.js icinde.
+const KAYIT_DB = "meridyen-kayitlar";
+const KAYIT_DEPO = "kayitlar";
+
+function kayitDeposu(){
+  return new Promise((coz, sik) => {
+    const istek = indexedDB.open(KAYIT_DB, 1);
+    istek.onupgradeneeded = () => {
+      const db = istek.result;
+      if(!db.objectStoreNames.contains(KAYIT_DEPO)) db.createObjectStore(KAYIT_DEPO);
+    };
+    istek.onsuccess = () => coz(istek.result);
+    istek.onerror = () => sik(istek.error);
+  });
+}
+
+async function kayitlariOku(){
+  try{
+    const db = await kayitDeposu();
+    return await new Promise((coz) => {
+      const islem = db.transaction(KAYIT_DEPO, "readonly").objectStore(KAYIT_DEPO);
+      const anahtarlar = islem.getAllKeys(), degerler = islem.getAll();
+      degerler.onsuccess = () => coz((anahtarlar.result || []).map((ad, i) => (
+        {ad: String(ad), icerik: degerler.result[i]})));
+      degerler.onerror = () => coz([]);
+    });
+  }catch(e){ return []; }
+}
+
+// YAZMA BASARISIZ OLURSA OGRENCI BUNU OGRENMELI
+// ---------------------------------------------
+// Eskiden yalnizca `console.warn` vardi. Oyun "Kaydedildi" yaziyor,
+// ogrenci ilerlemesinin guvende oldugunu saniyor, sekme kapaninca her sey
+// gidiyordu. Bu, sabah duzeltilen sessiz kaybin baska sebepli hali:
+// gizli sekme, dolu disk, tarayicinin site verisini engellemesi.
+//
+// AYRICA `put()` BEKLENMIYORDU. IndexedDB kota hatasini cagrida degil
+// istegin/islemin uzerinde bildiriyor; try/catch onu hic gormuyordu.
+async function kayitYaz(ad, icerik, silindi){
+  try{
+    const db = await kayitDeposu();
+    await new Promise((coz, sik) => {
+      const islem = db.transaction(KAYIT_DEPO, "readwrite");
+      const depo = islem.objectStore(KAYIT_DEPO);
+      const istek = silindi ? depo.delete(ad) : depo.put(icerik, ad);
+      istek.onerror = () => sik(istek.error);
+      islem.onabort = () => sik(islem.error);
+      islem.oncomplete = () => coz();
+    });
+    depolamaCalisiyor(true);
+    return true;
+  }catch(e){
+    // Oyun DURMUYOR: ogrenci oynamaya devam eder, yalnizca ilerlemesi
+    // bu oturumda kalir. Ama bunu BILEREK devam etsin.
+    console.warn("kayıt yazılamadı", e);
+    depolamaCalisiyor(false, e);
+    return false;
+  }
+}
+
+// Depolama rozeti. Cevrimdisi rozetiyle ayni yerde ve ayni mantikta:
+// sinanamayan bir sey gorunur kilinmali.
+let depolamaDurumu = null;
+function depolamaCalisiyor(calisiyor, sorun){
+  if (depolamaDurumu === calisiyor) return;      // her kayitta DOM'a dokunma
+  depolamaDurumu = calisiyor;
+  const rozet = $("depolama");
+  if (calisiyor){ rozet.hidden = true; return; }
+  rozet.hidden = false;
+  rozet.textContent = "ilerleme kaydedilmiyor";
+  rozet.onclick = () => alert(
+    ["Bu tarayıcı oyunun ilerlemeni kaydetmesine izin vermiyor.", "",
+     "Oynamaya devam edebilirsin ama sekmeyi kapatınca ilerleme gider.", "",
+     "Sebebi genellikle şunlardan biridir:",
+     "• Gizli (incognito) sekmede açtın",
+     "• Telefonun depolaması dolu",
+     "• Tarayıcı bu site için veri saklamayı engelliyor",
+     sorun ? "" : null, sorun ? "Teknik: " + sorun : null
+    ].filter(s => s !== null).join("\n"));
+}
+
+// ACILISTA DENE. Bir saat oynayip sonra ogrenmek, en bastan bilmekten
+// cok daha pahali.
+async function depolamayiSina(){
+  const deneme = "__deneme__";
+  const tamam = await kayitYaz(deneme, "1", false);
+  if (tamam) await kayitYaz(deneme, null, true);
+}
+
+// AYNI OYUN İKİ SEKMEDE AÇIKSA
+// ----------------------------
+// İki sekme aynı IndexedDB'ye yazıyor ve anahtarlar aynı. İkisi de
+// oynanırsa sonra kaydeden diğerini EZER: öğrenci bir sekmede yarım saat
+// oynar, öbür sekme kaydedince o yarım saat silinir. Sessizce.
+//
+// Kilit koymuyoruz -- ikinci sekmeyi çalışmaz hâle getirmek, öğrencinin
+// neden çalışmadığını anlamadığı bir durum yaratır. Yalnızca haber
+// veriyoruz; hangi sekmede kalacağına kendisi karar versin.
+//
+// BroadcastChannel her tarayıcıda yok; olmayan yerde bu koruma da yok
+// ve bu kabul edilebilir (sessizce atlanıyor, hata üretmiyor).
+function ikinciSekmeyiSez(){
+  let kanal;
+  try{ kanal = new BroadcastChannel("meridyen-oyun"); }catch(e){ return; }
+  kanal.onmessage = (olay) => {
+    if (olay.data !== "merhaba") return;
+    // Başka bir sekme açıldı. O da bizi duyacak; ikisi de uyarılsın.
+    kanal.postMessage("buradayim");
+    ikiSekmeUyar();
+  };
+  kanal.addEventListener("message", (olay) => {
+    if (olay.data === "buradayim") ikiSekmeUyar();
+  });
+  try{ kanal.postMessage("merhaba"); }catch(e){}
+}
+
+let ikiSekmeSoylendi = false;
+function ikiSekmeUyar(){
+  if (ikiSekmeSoylendi) return;      // bir kez yeter; her mesajda değil
+  ikiSekmeSoylendi = true;
+  const rozet = $("depolama");
+  rozet.hidden = false;
+  rozet.textContent = "oyun iki yerde açık";
+  rozet.onclick = () => alert(
+    ["Bu oyun başka bir sekmede de açık.", "",
+     "İkisinde birden oynarsan, sonra kaydeden diğerinin ilerlemesini",
+     "siler. Birini kapat."].join(String.fromCharCode(10)));
+}
+
+// GERİ TUŞU
+// ---------
+// Android'de geri tuşu sürekli kullanılıyor ve burada sayfadan çıkmak
+// demek: çalışan oyun yok oluyor, o anki görev kayboluyor (kayıt görev
+// sonunda yapılıyor). Öğrenci bir refleksle yarım saatini siliyor.
+//
+// Tuşu SESSİZCE yutmuyoruz -- bu düpedüz kullanıcıyı hapsetmek olurdu.
+// Soruyoruz. "Hayır" derse tarihçeye yeni bir adım koyup kalıyoruz,
+// "evet" derse gerçekten çıkıyor.
+function geriTusunuKoru(){
+  try{ history.pushState({oyun:1}, ""); }catch(e){ return; }
+  addEventListener("popstate", () => {
+    const cikilsin = confirm(
+      ["Oyundan çıkmak istiyor musun?", "",
+       "Tamamladığın görevler kayıtlı. Şu anda yarım kalan bir görev",
+       "varsa o kaydedilmez."].join(String.fromCharCode(10)));
+    if (cikilsin){
+      // Kullanici gercekten cikmak istiyor: tuzagi kaldirip geri git.
+      history.back();
+      return;
+    }
+    try{ history.pushState({oyun:1}, ""); }catch(e){}
+  });
+}
+
+// AÇILIŞTA HATA OLURSA
+// --------------------
+// Eskiden ekranda yalnızca "Bir hata oldu: <teknik mesaj>" yazıyordu.
+// Öğrenci ondan bir şey anlamıyor ve yapabileceği bir şey de göremiyor;
+// sayfa orada ölüyordu.
+//
+// Teknik mesaj ATILMIYOR -- kapalı bir bölümde duruyor, çünkü bize
+// ulaşması gerekiyor. Ama öğrencinin gördüğü ilk şey o değil.
+function acilisHatasi(mesaj){
+  if (typeof gozcuyuDurdur === "function") gozcuyuDurdur();
+  $("yukleme").hidden = true;
+  const kutu = $("hata");
+  kutu.hidden = false;
+  kutu.innerHTML =
+      '<h2 style="margin:0 0 10px">Oyun açılamadı</h2>'
+    + '<p>Bir şeyler ters gitti ve oyun başlayamadı. İlerlemen '
+    + 'telefonunda duruyor; kaybolmadı.</p>'
+    + '<p>Sırayla dene:</p>'
+    + '<ol><li>Tekrar dene (aşağıdaki düğme).</li>'
+    + '<li>Başka bir ağa geç: kablosuz ↔ hücresel.</li>'
+    + '<li>Tarayıcıyı tamamen kapatıp yeniden aç.</li></ol>'
+    + '<button onclick="location.reload()">Tekrar dene</button>'
+    + '<details><summary>Teknik ayrıntı</summary><pre>'
+    + String(mesaj).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))
+    + '</pre></details>';
+}
+
+async function basla(){
+  if(typeof SharedArrayBuffer==="undefined"||!self.crossOriginIsolated){
+    acilamadi();
+    return;
+  }
+  const kayitlar = await kayitlariOku();
+  depolamayiSina();          // beklemiyoruz; oyun bunun icin gecikmesin
+  const kilit=new SharedArrayBuffer(8), tampon=new SharedArrayBuffer(4096);
+  k32=new Int32Array(kilit); tbuf=new Uint8Array(tampon);
+  isci=new Worker("isci.js");
+  isci.onmessage=(e)=>{
+    const m=e.data;
+    if(m.tur==="durum"){ $("durum").textContent=m.metin; }
+    else if(m.tur==="hazir"){ gozcuyuDurdur(); $("yukleme").hidden=true; $("oyun").style.display="flex"; genisligiBildir(); }
+    else if(m.tur==="satir"){ satirlar.push(m.satir); if(satirlar.length>3000) satirlar.splice(0,500); ciz(); }
+    else if(m.tur==="temizle"){ satirlar=[]; ciz(); }
+    else if(m.tur==="kayit"){ kayitYaz(m.ad, m.icerik, m.silindi); }
+    else if(m.tur==="istem"){
+      bekliyor=true; girdiEl.disabled=false;
+      istemEl.textContent=m.istem.replace(/\s+/g," ").trim()||"…";
+      girdiEl.focus({preventScroll:true});
+    }
+    else if(m.tur==="bitti"){
+      bekliyor=false; girdiEl.disabled=true; istemEl.textContent="Oyun kapandı. Sayfayı yenile.";
+    }
+    else if(m.tur==="hata"){ acilisHatasi(m.mesaj); }
+  };
+
+  // BEKLEME GOZCUSU
+  // ---------------
+  // `loadPyodide()` zaman asimi tanimiyor. Okul kablosuzu yavassa ya da
+  // CDN engelliyse sayfa "Oyun motoru indiriliyor..." yazip SONSUZA KADAR
+  // bekliyordu -- ogrenci donmus bir ekrana bakiyor ve bekleyecek mi
+  // yenileyecek mi bilmiyor.
+  //
+  // Iki esik var cunku iki farkli durum var: yavas ag ile calismayan ag.
+  // Ilkinde beklemek DOGRU cevap; hemen "hata" demek, isleyen bir indirmeyi
+  // kullanicidan gizlemek olurdu.
+  const YAVAS_ESIK = 25000, PES_ESIK = 90000;
+  let yavasSayaci = setTimeout(()=>{
+    $("gecikme").hidden=false;
+    $("gecikme").textContent =
+      "Uzun sürüyor. Bağlantın yavaşsa bu normal -- indirme devam ediyor, "
+      + "beklemen yeter.";
+  }, YAVAS_ESIK);
+  let pesSayaci = setTimeout(()=>{
+    $("gecikme").hidden=false;
+    $("gecikme").innerHTML =
+      "<b>İndirme bitmedi.</b> Bağlantı çok yavaş ya da oyun motoruna "
+      + "ulaşılamıyor.<br>Başka bir ağ dene (kablosuz ↔ hücresel) ya da "
+      + "tekrar dene."
+      + "<br><button onclick=\"location.reload()\">Tekrar dene</button>";
+  }, PES_ESIK);
+  function gozcuyuDurdur(){
+    clearTimeout(yavasSayaci); clearTimeout(pesSayaci);
+    $("gecikme").hidden=true;
+  }
+  genisligiBildir();
+  isci.postMessage({tur:"basla",kilit:kilit,tampon:tampon,kayitlar:kayitlar});
+  geriTusunuKoru();
+  ikinciSekmeyiSez();
+  // Telefon yan cevrilirse kutular yeniden olculsun.
+  let zamanlayici=null;
+  addEventListener("resize",()=>{clearTimeout(zamanlayici);
+    zamanlayici=setTimeout(genisligiBildir,250);});
+  // Not: "sekme arkaya alininca kaydet" diye bir sey YOK ve olamaz --
+  // isci o mesaji oyun bitene kadar isleyemiyor (bkz. isci.js). Kayit
+  // artik yazildigi ANDA kalici oluyor, bu yuzden gerek de kalmadi.
+}
+// CEVRIMDISI HAZIRLIK
+// -------------------
+// Servis isci calisirsa oyun internetsiz aciliyor. Calismazsa oyun YINE DE
+// oynanir -- sadece her acilista dosyalar yeniden iner. Bu ayrimi ogretmenin
+// gorebilmesi lazim, cunku sinifta internetin kesilmesi normal.
+// (Bu gomulu tarayici panelinde servis isciler kapali; dogrulama gercek
+//  telefonda yapilmali. Rozet tam bunun icin var.)
+const rozet=$("cevrimdisi");
+function rozetiYaz(hazir,neden){
+  rozet.hidden=false;
+  rozet.className=hazir?"hazir":"degil";
+  rozet.textContent=hazir?"çevrimdışı hazır":"çevrimdışı hazır değil";
+  const iyi="Oyun bu telefona kaydedildi. İnternet kesilse de açılır.";
+  const kotu=["Oyun çalışır ama her açılışta internetten iner.","",
+              "Sebep: "+neden,"",
+              "Çoğu zaman sayfanın https:// ile açılması gerekir;",
+              "düz http yalnızca 127.0.0.1 için geçerlidir."].join("\n");
+  rozet.onclick=()=>alert(hazir?iyi:kotu);
+}
+if(!("serviceWorker" in navigator)) rozetiYaz(false,"tarayıcı desteklemiyor");
+else navigator.serviceWorker.register("sw.js")
+      .then(()=>navigator.serviceWorker.ready).then(()=>rozetiYaz(true))
+      .catch(e=>rozetiYaz(false,e.message||String(e)));
+basla();
+</script>
+</body>
+</html>

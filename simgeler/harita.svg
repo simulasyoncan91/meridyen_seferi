@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Atlas">
+<title>Atlas</title>
+<rect x="4" y="4" width="56" height="56" rx="16" fill="#13213a" stroke="#c9a14a" stroke-width="1.5"/>
+<rect x="20" y="52" width="24" height="3" rx="1.5" fill="#4fae8c"/>
+<g fill="none" stroke="#c9a14a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="32" cy="32" r="14"/>
+<path d="M18 32 H46"/>
+<path d="M32 18 Q24 32 32 46 M32 18 Q40 32 32 46"/>
+<path d="M38 23 L41 22.5 L42 27 L39 28 Z" fill="#4fae8c"/>
+</g>
+</svg>

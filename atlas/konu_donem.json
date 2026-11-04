@@ -1,0 +1,33 @@
+{
+  "surum": 1,
+  "aciklama": "Görev kodu veya ders -> Atlas'ın açılacağı dönem/katman. Önce 'gorevler', yoksa 'dersler' bakılır. 'yakin': dönem tam o yıl değil, en yakın hazır dönem.",
+  "gorevler": {
+    "tar-anadolu-kayitlari": {"donem": "ms13-anadolu-selcuklu"},
+    "tar-degisim-hizlari": {"donem": "ms11-bselcuklu", "yakin": true},
+    "tar-dirlik-defteri": {"donem": "1453-osmanli", "yakin": true},
+    "tar-vakfiye-sarti": {"donem": "1453-osmanli", "yakin": true},
+    "tar-saray-belgeleri": {"donem": "1453-osmanli", "yakin": true},
+    "tar-donem-vitrini": {"donem": "1683-osmanli"},
+    "tar-taht-kayitlari": {"donem": "1683-osmanli", "yakin": true},
+    "tar-divan-kadrosu": {"donem": "1683-osmanli", "yakin": true},
+    "tar-gedik-anlasmazligi": {"donem": "1683-osmanli", "yakin": true},
+    "tar-lale-arsivi": {"donem": "1683-osmanli", "yakin": true},
+    "tar-sanayi-onerisi": {"donem": "1914-osmanli", "yakin": true},
+    "tar-depo-kalintilari": {"katman": "dunya"},
+    "ink-belge-tespiti": {"donem": "1920-sevr", "yakin": true},
+    "ink-kronoloji": {"donem": "1920-sevr", "yakin": true},
+    "ink-neden-sonuc": {"donem": "1914-osmanli", "yakin": true},
+    "ink-parti-arsivi": {"donem": "1923-lozan", "yakin": true},
+    "ink-karar-dosyasi": {"donem": "1920-sevr", "yakin": true},
+    "ink-sergi-panosu": {"donem": "1923-lozan", "yakin": true},
+    "cog-tr-tedarik": {"katman": "turkiye"},
+    "cog-tr-bolge": {"katman": "bolge"},
+    "cog-tr-tesis": {"katman": "turkiye"},
+    "cog-tr-kaynak": {"katman": "turkiye"}
+  },
+  "dersler": {
+    "tarih": {"donem": "1453-osmanli", "yakin": true},
+    "inkilap": {"donem": "1920-sevr", "yakin": true},
+    "cografya": {"katman": "dunya"}
+  }
+}

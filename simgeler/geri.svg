@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Telsiz">
+<title>Telsiz</title>
+<rect x="4" y="4" width="56" height="56" rx="16" fill="#13213a" stroke="#c9a14a" stroke-width="1.5"/>
+<rect x="20" y="52" width="24" height="3" rx="1.5" fill="#d9765f"/>
+<g fill="none" stroke="#c9a14a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="24" y="26" width="14" height="20" rx="3"/>
+<path d="M29 26 V17"/>
+<path d="M34 18 Q37 21 34 24"/>
+<path d="M38 15 Q44 21 38 27"/>
+<rect x="28" y="31" width="6" height="6" rx="1" fill="#d9765f"/>
+</g>
+</svg>

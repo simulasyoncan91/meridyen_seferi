@@ -212,7 +212,7 @@
   function ortu(baslik, metin) {
     if (tasiyici.tekrar) return;
     const o = $('#ortu'), k = $('#ortu-kutu');
-    k.textContent = '';
+    k.className = ''; k.textContent = '';
     k.appendChild(el('div', { sinif: 'terfi-yildiz', metin: '★' }));
     k.appendChild(el('h2', { metin: baslik }));
     k.appendChild(el('p', { metin: metin }));
@@ -229,7 +229,11 @@
     e.title = D.surum ? 'Meridyen OS ' + D.surum + ': görev raporladıkça yeni yerler yüklenir.' : '';
   }
   function panoCiz(p) {
-    if (p.surum) surumYaz(p.surum);
+    if (p.surum) {
+      const k = sisYukle();
+      if (!k.bekleyen.length) { k.surum = p.surum; sisKaydet(); surumYaz(p.surum); }
+      else surumYaz(k.surum || '');
+    }
     const kim = $('#d-kimlik'); kim.textContent = '';
     kim.append(el('b', { metin: p.oyuncu || 'Kâşif' }), el('span', { sinif: 'rutbe', metin: p.rutbe || '', title: p.sonraki_rutbe ? 'Sıradaki rütbe: ' + p.sonraki_rutbe : '' }));
     const k = $('#d-kaynak'); k.textContent = '';
@@ -253,6 +257,12 @@
     dock.textContent = '';
     const menuda = D.mod === 'ana' && D.bekle && D.bekle.bicim === 'menu';
     yerler.forEach((y, i) => {
+      if (bekliyorMu(y.anahtar)) {
+        dock.appendChild(el('button', { sinif: 'simge kilit', 'aria-label': y.ad + ' (güncellemeyle gelir)', title: 'Meridyen OS güncellemesiyle gelir',
+          'data-anahtar': y.anahtar, onclick: () => sistemAc() },
+          simge(y.anahtar, y.ad), el('span', { sinif: 'ad', metin: KISA_AD[y.anahtar] || y.ad }), el('span', { sinif: 'bdg yeni', metin: 'yükle' })));
+        return;
+      }
       const atl = y.anahtar === 'harita', tel = y.anahtar === 'geri';
       dock.appendChild(el('button', { sinif: 'simge' + (menuda || atl || tel ? '' : ' pasif'), title: atl ? 'Atlas: dünya, Türkiye, şehir, bölge ve tarih haritaları' : tel ? 'Telsiz: sınıf, okul, öğretmen ve arkadaşlarınla yaz; geliştiriciye geri bildirim gönder' : (y.aciklama || y.ad),
         'aria-label': atl ? 'Atlas' : tel ? 'Telsiz' : y.ad, 'data-anahtar': y.anahtar, onclick: () => (atl ? atlasAc() : tel ? telsizAc() : dockSec(i)) },
@@ -284,6 +294,7 @@
     if (i >= 0) dockSec(i);
   }
   function dockSec(i) {
+    if (yerler[i] && bekliyorMu(yerler[i].anahtar)) { sistemAc(); return; }
     if (!(D.mod === 'ana' && D.bekle && D.bekle.bicim === 'menu')) {
       toast('bilgi', 'Önce açık olan işi bitir ya da Nöbeti Devret.', 'MEŞGUL'); return;
     }
@@ -527,11 +538,163 @@
     g.append(sol, sag);
   }
 
+  // ------------------------------------------------------------ Sistem: guncellemeler ve gorunum
+  // Kullanici (5 Kasim 2026): "Sistem otomatik guncellenmesin. Guncellerken
+  // yeni sekmeler aciliyor ama arayuz hic degismiyor. Bazi arayuzler cok
+  // iyidir, bazilarindan kurtulmak istersin."
+  //  * Motor yeni yer acinca bu artik GUNCELLEME HAZIR olarak bekler; ogrenci
+  //    "Simdi yukle" ya da "Sonra" der. Isteyen Sistem'den otomatige alir.
+  //  * Guncellemeler yeni gorunum getirebilir; hicbiri zorla gelmez ve ogrenci
+  //    istedigi an eskisine doner.
+  //  * Bekleyen yer kilitli DEGILDIR: rihtimda gorunur, tiklayinca Sistem acilir;
+  //    yuklemek tek tik. Yani ilerleme hic durmaz (oyunun "kilit yok" ilkesi).
+  // Kayit yalniz bu tarayicida (localStorage, oyuncu adina gore); depo yoksa
+  // bellekte kalir ve eski davranis (her sey kurulu) bozulmaz.
+  const GORUNUMLER = [
+    { kod: 'klasik', ad: 'Klasik', aciklama: 'Gece mavisi ve pirinç. İlk günkü Meridyen OS.', esik: 0 },
+    { kod: 'gunduz', ad: 'Gündüz', aciklama: 'Açık renk; aydınlık sınıfta ve projeksiyonda rahat okunur.', esik: 0 },
+    { kod: 'sade', ad: 'Sade', aciklama: 'Siyah zemin, büyük yazı, yüksek karşıtlık, hareketsiz.', esik: 0 },
+    { kod: 'cam', ad: 'Cam', aciklama: 'Saydam pencereler, yüzen rıhtım, yumuşak köşeler.', esik: 1 },
+    { kod: 'karo', ad: 'Karo', aciklama: 'Düz renkli karolar, keskin köşeler, renkli pencere başlıkları.', esik: 3 }
+  ];
+  const SIS_ONEK = 'meridyen-os-sistem:';
+  const S = { anahtar: '', kayit: null };
+  function sisBos() { return { kurulu: null, bekleyen: [], bekSurum: '', surum: '', sayi: 0, mod: 'sor', gorunum: 'klasik', denendi: [] }; }
+  function sisYukle() {
+    const ad = (D.pano && D.pano.oyuncu) || 'kasif';
+    if (S.kayit && S.anahtar === ad) return S.kayit;
+    let k = null;
+    try { k = JSON.parse(localStorage.getItem(SIS_ONEK + ad) || 'null'); } catch (e) { k = null; }
+    S.anahtar = ad; S.kayit = Object.assign(sisBos(), k && typeof k === 'object' ? k : {});
+    gorunumUygula(S.kayit.gorunum);
+    return S.kayit;
+  }
+  function sisKaydet() { try { localStorage.setItem(SIS_ONEK + S.anahtar, JSON.stringify(S.kayit)); } catch (e) { /* depo yok */ } }
+  function gorunumAcik(g, k) { return (k || sisYukle()).sayi >= g.esik; }
+  function gorunumUygula(kod) {
+    const g = GORUNUMLER.find((x) => x.kod === kod) || GORUNUMLER[0];
+    if (g.kod === 'klasik') document.documentElement.removeAttribute('data-gorunum');
+    else document.documentElement.setAttribute('data-gorunum', g.kod);
+    const renk = getComputedStyle(document.documentElement).getPropertyValue('--zemin').trim();
+    const m = document.querySelector('meta[name="theme-color"]'); if (m && renk) m.setAttribute('content', renk);
+  }
+  function bekliyorMu(anahtar) { const k = S.kayit; return !!(k && k.bekleyen.some((y) => y.anahtar === anahtar)); }
+  // Motorun gonderdigi acik yerlerle kaydi karsilastirir. Ilk kez gorulen
+  // oyuncuda (eski kayitlar dahil) hepsi kurulu sayilir: kimse bir sey kaybetmez.
+  function sisYerleriDenetle(liste, surum, guncellemeMi) {
+    const k = sisYukle();
+    if (!k.kurulu) {
+      if (guncellemeMi) {
+        // Temel yerler henuz bilinmiyor (ana menu gelmedi): yalniz gelenleri beklet.
+        liste.forEach((y) => { if (!k.bekleyen.some((b) => b.anahtar === y.anahtar)) k.bekleyen.push(y); });
+        if (surum) k.bekSurum = surum;
+        sisKaydet(); if (k.mod === 'otomatik') guncellemeYukle(); else guncellemeHazir();
+        sistemDugmesi(); return;
+      }
+      const bek = k.bekleyen.map((y) => y.anahtar);
+      k.kurulu = liste.map((y) => y.anahtar).filter((a) => bek.indexOf(a) < 0);
+      if (!k.bekleyen.length) k.surum = surum || D.surum || '';
+      sisKaydet(); sistemDugmesi(); return;
+    }
+    let yeni = false;
+    liste.forEach((y) => {
+      if (k.kurulu.indexOf(y.anahtar) < 0 && !k.bekleyen.some((b) => b.anahtar === y.anahtar)) {
+        k.bekleyen.push({ anahtar: y.anahtar, ad: y.ad || y.anahtar }); yeni = true;
+      }
+    });
+    if (surum && k.bekleyen.length) k.bekSurum = surum;
+    sisKaydet();
+    if (yeni && k.mod === 'otomatik') guncellemeYukle(); else if (yeni) guncellemeHazir();
+    sistemDugmesi();
+  }
+  function sistemDugmesi() {
+    const b = $('#d-sistem'); if (!b) return;
+    const n = (S.kayit && S.kayit.bekleyen.length) || 0;
+    b.classList.toggle('hazir', n > 0);
+    b.textContent = n ? 'Güncelleme hazır' : 'Sistem';
+    b.setAttribute('aria-label', n ? 'Sistem: güncelleme hazır' : 'Sistem: güncellemeler ve görünüm');
+  }
+  function guncellemeHazir() {
+    const k = sisYukle();
+    toast('haber', 'Meridyen OS ' + (k.bekSurum || 'güncellemesi') + ' hazır: ' + k.bekleyen.map((y) => y.ad).join(', ') +
+      '. Yüklemek için üstteki "Güncelleme hazır" düğmesine bas.', 'GÜNCELLEME HAZIR');
+  }
+  function guncellemeYukle() {
+    const k = sisYukle(); if (!k.bekleyen.length) return;
+    const yeniler = k.bekleyen.slice(), oncekiSayi = k.sayi;
+    k.kurulu = (k.kurulu || []).concat(yeniler.map((y) => y.anahtar));
+    k.bekleyen = []; k.sayi += 1; if (k.bekSurum) k.surum = k.bekSurum; k.bekSurum = '';
+    sisKaydet();
+    guncellemeAnimasyonu({ surum: k.surum || D.surum, yerler: yeniler });
+    sistemDugmesi(); dockCiz();
+    const gelen = GORUNUMLER.filter((g) => g.esik > oncekiSayi && g.esik <= k.sayi);
+    if (gelen.length) setTimeout(() => yeniGorunumSor(gelen[0]), 2800);
+  }
+  function yeniGorunumSor(g) {
+    if (tasiyici.tekrar) return;
+    const o = $('#ortu'), kk = $('#ortu-kutu');
+    kk.className = ''; kk.textContent = '';
+    const k = sisYukle();
+    kk.append(el('div', { sinif: 'etiket', metin: 'YENİ GÖRÜNÜM' }), el('h2', { metin: g.ad }), el('p', { metin: g.aciklama }),
+      el('p', { sinif: 'soluk', metin: 'İstemezsen hiçbir şey değişmez. Denersen ve beğenmezsen Sistem penceresinden istediğin an eskisine dönersin.' }),
+      el('div', { sinif: 'sis-dugmeler' },
+        el('button', { sinif: 'dugme birincil', metin: 'Dene', onclick: () => { gorunumSec(g.kod); o.hidden = true; toast('bilgi', 'Beğenmezsen: Sistem → Görünüm → ' + (GORUNUMLER.find((x) => x.kod === k.onceki) || GORUNUMLER[0]).ad, 'GÖRÜNÜM'); } }),
+        el('button', { sinif: 'dugme', metin: 'Eskisi kalsın', onclick: () => { o.hidden = true; } })));
+    o.hidden = false;
+  }
+  function gorunumSec(kod) {
+    const k = sisYukle();
+    if (k.gorunum !== kod) k.onceki = k.gorunum;
+    k.gorunum = kod; if (k.denendi.indexOf(kod) < 0) k.denendi.push(kod);
+    sisKaydet(); gorunumUygula(kod);
+  }
+  function sistemAc() {
+    const k = sisYukle();
+    const o = $('#ortu'), kk = $('#ortu-kutu');
+    kk.className = 'sistem'; kk.textContent = '';
+    kk.append(el('h2', { metin: 'Sistem' }), el('p', { sinif: 'soluk', metin: 'Meridyen OS ' + (k.surum || D.surum || '') }));
+    // Guncellemeler
+    const gb = el('div', { sinif: 'sis-bolum' }, el('h3', { metin: 'GÜNCELLEMELER' }));
+    if (k.bekleyen.length) {
+      gb.append(el('p', { metin: (k.bekSurum ? 'Sürüm ' + k.bekSurum + ' hazır. ' : 'Güncelleme hazır. ') + 'Gelenler: ' + k.bekleyen.map((y) => y.ad).join(', ') + '.' }),
+        el('div', { sinif: 'sis-dugmeler' },
+          el('button', { sinif: 'dugme birincil', metin: 'Şimdi yükle', onclick: () => { o.hidden = true; guncellemeYukle(); } }),
+          el('button', { sinif: 'dugme', metin: 'Sonra', onclick: () => { o.hidden = true; } })));
+    } else gb.append(el('p', { sinif: 'soluk', metin: 'Sistem güncel. Görev raporladıkça yeni güncellemeler gelir.' }));
+    const modSec = (mod, baslik, acik) => {
+      const r = el('input', { type: 'radio', name: 'sis-mod', value: mod });
+      r.checked = k.mod === mod;
+      r.addEventListener('change', () => { k.mod = mod; sisKaydet(); if (mod === 'otomatik' && k.bekleyen.length) { o.hidden = true; guncellemeYukle(); } });
+      return el('label', { sinif: 'sis-secenek' }, r, el('span', {}, el('b', { metin: baslik }), el('br'), el('span', { sinif: 'soluk', metin: acik })));
+    };
+    gb.append(modSec('sor', 'Bana sor', 'Güncelleme gelince haber ver; ne zaman yükleyeceğime ben karar vereyim.'),
+      modSec('otomatik', 'Otomatik yükle', 'Gelir gelmez yüklensin.'));
+    // Gorunum
+    const vb = el('div', { sinif: 'sis-bolum' }, el('h3', { metin: 'GÖRÜNÜM' }));
+    GORUNUMLER.forEach((g) => {
+      const acik = gorunumAcik(g, k);
+      const r = el('input', { type: 'radio', name: 'sis-gorunum', value: g.kod, disabled: !acik });
+      r.checked = k.gorunum === g.kod;
+      r.addEventListener('change', () => gorunumSec(g.kod));
+      const kalan = g.esik - k.sayi;
+      vb.appendChild(el('label', { sinif: 'sis-secenek' + (acik ? '' : ' kapali') }, r, el('span', { sinif: 'sis-ornek o-' + g.kod }),
+        el('span', {}, el('b', { metin: g.ad }), el('br'),
+          el('span', { sinif: 'soluk', metin: acik ? g.aciklama : g.aciklama + ' ' + kalan + ' güncelleme sonra gelir.' }))));
+    });
+    kk.append(gb, vb, el('div', { sinif: 'sis-dugmeler' }, el('button', { sinif: 'dugme', metin: 'Kapat', onclick: () => { o.hidden = true; } })));
+    o.hidden = false;
+    const ilk = kk.querySelector('input:checked') || kk.querySelector('button'); if (ilk) ilk.focus();
+  }
+
   // ------------------------------------------------------------ Surum guncellemesi
   // Motor `guncelleme` baglami gonderir (kademeli acilista yeni yer); bu bir
   // yazilim guncellemesi gibi gorunur. prefers-reduced-motion: animasyon yok.
   let guncelZaman = null;
   function guncellemeGoster(ev) {
+    // Motor yeni yer acti: Sistem'e "hazir" olarak duser (ya da otomatik yuklenir).
+    sisYerleriDenetle((ev.yerler || []).map((y) => ({ anahtar: y.anahtar, ad: y.ad || y.anahtar })), ev.surum, true);
+  }
+  function guncellemeAnimasyonu(ev) {
     surumYaz(ev.surum);
     const adlar = (ev.yerler || []).map((y) => y.ad || y.anahtar);
     (ev.yerler || []).forEach((y) => { D.yeniYer[y.anahtar] = true; });
@@ -772,6 +935,7 @@
         D.tampon = null; D.mod = 'ana'; D.ana = ev; D.G = null;
         ['gorev', 'belge', 'konsol'].forEach(kaldir);
         yerler = (ev.yerler || []).slice(); kilitli = (ev.kilitli || []).slice();
+        sisYerleriDenetle(yerler, D.pano && D.pano.surum);
         masaKarti(ev); dockCiz();
         break;
       case 'uygulama': break;
@@ -873,6 +1037,7 @@
     D.mod = 'bos'; D.G = null; D.bekle = null; D.aktif = null; D.tampon = null;
     ['konsol', 'gorev', 'belge', 'arsiv', 'posta', 'atlas', 'telsiz'].forEach(kaldir);
     A.kayit = []; A.gunluk = []; A.yol = []; P.secili = null; D.yeniYer = {};
+    S.kayit = null; S.anahtar = ''; sistemDugmesi();
     konsolLog.textContent = ''; $('#bildirimler').textContent = '';
     const gc = $('#guncelleme'); if (gc) gc.hidden = true;
     $('#m-hedef').hidden = $('#m-kisisel').hidden = $('#m-haber').hidden = true;
@@ -911,6 +1076,7 @@
   tasiyici.durumDinle((m) => { if (m) $('#m-alt').textContent = m; });
   tasiyici.otomatik = (metin) => gonder(metin);
   surumYaz(''); dockCiz(); oynaticiKur(); masaustu();
+  (function () { const b = $('#d-sistem'); if (b) b.addEventListener('click', sistemAc); sisYukle(); sistemDugmesi(); })();
   // Sinama/ekran goruntusu kolayligi: ?ac=arsiv|posta (ve ?yol=Dersler/Fizik) sayfa acilinca uygulamayi acar.
   (function () {
     const q = new URLSearchParams(location.search), ac = q.get('ac');
@@ -930,6 +1096,6 @@
     if (q.get('yol')) A.yol = q.get('yol').split('/').filter(Boolean);
     setTimeout(() => (ac === 'telsiz' ? telsizAc() : yerelAc(ac)), 600);
   })();
-  window.__os = { D, olay, gonder, tasiyici, A, P, atlasAc, telsiz };
+  window.__os = { D, olay, gonder, tasiyici, A, P, atlasAc, telsiz, S, sistemAc, guncellemeYukle, gorunumSec };
   tasiyici.baslat();
 })();

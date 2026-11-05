@@ -2,7 +2,7 @@
 //
 // SURUM: uygulama dosyalarindan biri degisince buradaki sayiyi artir.
 // Artirmazsan eski onbellek silinmez; sorun cikarmaz ama gereksiz yer tutar.
-const AD = "meridyen-v5";
+const AD = "meridyen-v6";
 
 const KENDI = [
   "./", "./index.html", "./isci.js", "./oyun_paketi.zip",
